@@ -73,6 +73,7 @@ module.exports = config;
 Once the build finishes, a child process is spawned firing both a python and node script.
 
 ### API
+* `onBeforeBuild`: array of scripts to execute before every build. **Default: [ ]**
 * `onBuildStart`: array of scripts to execute on the initial build. **Default: [ ]**
 * `onBuildEnd`: array of scripts to execute after files are emitted at the end of the compilation. **Default: [ ]**
 * `onBuildExit`: array of scripts to execute after webpack's process is complete. *Note: this event also fires in `webpack --watch` when webpack has finished updating the bundle.* **Default: [ ]**

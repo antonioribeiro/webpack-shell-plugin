@@ -3,6 +3,7 @@ const exec = require('child_process').exec;
 const os = require('os');
 
 const defaultOptions = {
+  onBeforeBuild: [],
   onBuildStart: [],
   onBuildEnd: [],
   onBuildExit: [],
@@ -47,6 +48,9 @@ export default class WebpackShellPlugin {
   }
 
   validateInput(options) {
+    if (typeof options.onBeforeBuild === 'string') {
+      options.onBeforeBuild = options.onBeforeBuild.split('&&');
+    }
     if (typeof options.onBuildStart === 'string') {
       options.onBuildStart = options.onBuildStart.split('&&');
     }
@@ -69,6 +73,14 @@ export default class WebpackShellPlugin {
   }
 
   apply(compiler) {
+    compiler.plugin('invalid', function () {
+      if (this.options.onBeforeBuild.length) {
+        console.log('Executing before build scripts');
+        for (var i = 0; i < this.options.onBeforeBuild.length; i++) {
+          this.handleScript(this.options.onBeforeBuild[i]);
+        }
+      }
+    });
 
     compiler.plugin('compilation', (compilation) => {
       if (this.options.verbose) {
